@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "48142217729",
+    "project_id": "master-cafe",
+    "storage_bucket": "master-cafe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48142217729:android:04768c8313434bd75c8600",
+        "android_client_info": {
+          "package_name": "com.example.layout"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOVcXxPtN8o7Yd7KJ7o3ZARkpdOG5SzV4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
