@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:layout/firebase_options.dart';
+import 'package:layout/screen/category_screen.dart';
 import 'package:layout/screen/login.dart';
 import 'package:layout/screen/registraion.dart';
 
@@ -23,13 +24,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
+          colorSchemeSeed: const Color.fromARGB(255, 202, 8, 209),
         ),
         home: const LoginScreen(),
         routes: {
           '/login': (context) => const LoginScreen(),
           '/registration': (context) => const RegistrationScreen(),
+          '/category': (context) => const CategoryScreen(),
         });
   }
 }

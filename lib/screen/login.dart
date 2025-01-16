@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,79 +18,102 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.purple,
       ),
-      body: Form(
-          key: _loginFormKey,
-          child: Column(
-            children: [
-              TextFormField(
-                autocorrect: false,
-                enableSuggestions: false,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  _email = value;
-                },
-              ),
-              TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  _password = value;
-                },
-              ),
-              ElevatedButton(
-                child: const Text('Login'),
-                onPressed: () {
-                  if (_loginFormKey.currentState!.validate()) {
-                    loginWithEmailAndPassword();
-                  }
-                },
-              ),
-              TextButton(
-                child: const Text('Don\'t have an account? Register'),
-                onPressed: () {
-                  // Navigate to registration screen
-                  Navigator.pushNamed(context, '/registration');
-                },
-              ),
-            ],
-          )),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Form(
+              key: _loginFormKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _email = value;
+                    },
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    child: const Text('Login'),
+                    onPressed: () async {
+                      if (_loginFormKey.currentState!.validate()) {
+                        String? response = await loginWithEmailAndPassword();
+                        Navigator.pushReplacementNamed(context, '/category');
+                        // if (response == null) {
+                        //   // login success
+                        //   Navigator.pushNamed(context, '/category');
+                        // } else {
+                        //   AnimatedSnackBar.material(
+                        //     mobileSnackBarPosition:
+                        //         MobileSnackBarPosition.bottom,
+                        //     response.toString(),
+                        //     type: AnimatedSnackBarType.warning,
+                        //   ).show(context);
+                        // }
+                      }
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('Don\'t have an account? Register'),
+                    onPressed: () {
+                      // Navigate to registration screen
+                      Navigator.pushNamed(context, '/registration');
+                    },
+                  ),
+                ],
+              )),
+        ),
+      ),
     );
   }
 
-  void loginWithEmailAndPassword() {
+  Future<String?> loginWithEmailAndPassword() async {
     try {
-      FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email!, password: _password!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        return ' User does not exist.';
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        return 'Invalid credentials.';
+      } else {
+        return e.message;
       }
     } catch (e) {
-      print(e);
+      return 'unexpected error. Please try again.';
     }
+    return null;
   }
 }
