@@ -14,6 +14,15 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _email;
   String? _password;
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    _email = 'test@t.com';
+    _password = 'pppppp';
+    print('this is the init state');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFormField(
+                    initialValue: _email,
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.emailAddress,
@@ -50,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   TextFormField(
+                    initialValue: _password,
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Password',
@@ -70,18 +81,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       if (_loginFormKey.currentState!.validate()) {
                         String? response = await loginWithEmailAndPassword();
-                        Navigator.pushReplacementNamed(context, '/category');
-                        // if (response == null) {
-                        //   // login success
-                        //   Navigator.pushNamed(context, '/category');
-                        // } else {
-                        //   AnimatedSnackBar.material(
-                        //     mobileSnackBarPosition:
-                        //         MobileSnackBarPosition.bottom,
-                        //     response.toString(),
-                        //     type: AnimatedSnackBarType.warning,
-                        //   ).show(context);
-                        // }
+                        // Navigator.pushReplacementNamed(context, '/category');
+                        if (response == null) {
+                          // login success
+                          Navigator.pushNamed(context, '/category');
+                        } else {
+                          AnimatedSnackBar.material(
+                            mobileSnackBarPosition:
+                                MobileSnackBarPosition.bottom,
+                            response.toString(),
+                            type: AnimatedSnackBarType.warning,
+                          ).show(context);
+                        }
                       }
                     },
                   ),
