@@ -11,15 +11,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? _email;
-  String? _password;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
-
+  bool isLoading = false;
   @override
   void initState() {
-    _email = 'test@t.com';
-    _password = 'pppppp';
-    print('this is the init state');
+    _emailController.text = 'test@t.com';
+    _passwordController.text = 'pppppp';
     super.initState();
   }
 
@@ -42,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextFormField(
-                    initialValue: _email,
+                    controller: _emailController,
                     autocorrect: false,
                     enableSuggestions: false,
                     keyboardType: TextInputType.emailAddress,
@@ -55,12 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-                      _email = value;
-                    },
                   ),
                   TextFormField(
-                    initialValue: _password,
+                    controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Password',
@@ -71,20 +67,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       return null;
                     },
-                    onChanged: (value) {
-                      _password = value;
-                    },
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    child: const Text('Login'),
+                    child: isLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                              color: Colors.greenAccent,
+                            ),
+                          )
+                        : const Text('Login'),
                     onPressed: () async {
                       if (_loginFormKey.currentState!.validate()) {
                         String? response = await loginWithEmailAndPassword();
                         // Navigator.pushReplacementNamed(context, '/category');
                         if (response == null) {
                           // login success
-                          Navigator.pushNamed(context, '/category');
+                          Navigator.pushReplacementNamed(context, '/category');
                         } else {
                           AnimatedSnackBar.material(
                             mobileSnackBarPosition:
@@ -112,8 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<String?> loginWithEmailAndPassword() async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email!, password: _password!);
+      setState(() {
+        isLoading = true;
+      });
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return ' User does not exist.';
@@ -124,6 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       return 'unexpected error. Please try again.';
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
     return null;
   }

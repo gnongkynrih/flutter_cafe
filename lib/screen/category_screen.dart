@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:layout/model/category_model.dart';
+import 'package:quickalert/quickalert.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -21,6 +22,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       FirebaseFirestore.instance.collection('categories');
   List<CategoryModel> categories = [];
   bool _isLoading = false;
+  bool _isAdding = false;
   bool _categoryStatus = true;
   void getCategories() async {
     try {
@@ -88,18 +90,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 FontAwesomeIcons.penToSquare,
                                 size: 15,
                               ),
-                              onPressed: () =>
-                                  {} //_showCategoryBottomSheet(category),
-                              ),
+                              onPressed: () => {
+                                    createOrEdit(context, category),
+                                  }),
                           IconButton(
                               icon: const FaIcon(
                                 FontAwesomeIcons.trash,
                                 color: Colors.red,
                                 size: 15,
                               ),
-                              onPressed: () =>
-                                  {} // _deleteCategory(category.id),
-                              ),
+                              onPressed: () => {
+                                    QuickAlert.show(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      type: QuickAlertType.confirm,
+                                      title: 'Delete Category',
+                                      text:
+                                          'Are you sure you want to delete this category?',
+                                      confirmBtnText: 'Yes',
+                                      cancelBtnText: 'No',
+                                      confirmBtnColor: Colors.purple,
+                                      onConfirmBtnTap: () async {
+                                        await _categoryCollection
+                                            .doc(category.id)
+                                            .delete();
+                                        setState(() {
+                                          categories.remove(category);
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    )
+                                  }),
                         ],
                       ),
                     );
@@ -110,13 +131,17 @@ class _CategoryScreenState extends State<CategoryScreen> {
       floatingActionButton: FloatingActionButton(
         child: const FaIcon(FontAwesomeIcons.plus),
         onPressed: () {
-          createOrEdit(context);
+          createOrEdit(context, null);
         },
       ),
     );
   }
 
-  void createOrEdit(BuildContext context) {
+  void createOrEdit(BuildContext context, CategoryModel? category) {
+    if (category != null) {
+      _categoryNameController.text = category.name;
+      _categoryStatus = category.status;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -164,12 +189,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                _isLoading
+                _isAdding
                     ? const SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(
-                          color: Colors.white,
+                          color: Colors.purple,
                           strokeWidth: 2,
                         ),
                       )
@@ -182,23 +207,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             disabledBackgroundColor:
                                 Colors.purple.withOpacity(0.6),
                           ),
-                          onPressed:
-                              // _isLoading ? null : () => _saveCategory(category?.id),
-
-                              () => saveCategory(),
-                          child: const Row(
+                          onPressed: () {
+                            setModalState(() {
+                              _isAdding = true;
+                            });
+                            saveCategory(category?.id);
+                          },
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              FaIcon(
+                              const FaIcon(
                                 FontAwesomeIcons.floppyDisk,
                                 color: Colors.white,
                                 size: 18,
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
-                                // category != null ? 'Update' : 'Save',
-                                'save',
-                                style: TextStyle(color: Colors.white),
+                                category != null
+                                    ? 'Update Category'
+                                    : 'Add Category',
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ],
                           ),
@@ -213,10 +241,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     );
   }
 
-  void saveCategory() async {
-    setState(() {
-      _isLoading = true;
-    });
+  void saveCategory(String? id) async {
     CategoryModel category = CategoryModel(
       name: _categoryNameController.text,
       status: _categoryStatus,
@@ -226,10 +251,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
         'name': _categoryNameController.text,
         'status': _categoryStatus,
       };
-      await _categoryCollection.add(data);
+      if (id == null) {
+        await _categoryCollection.add(data);
+      } else {
+        await _categoryCollection.doc(id).update(data);
+        setState(() {
+          //searches for the category in the list and removes it
+          categories.removeWhere((item) => item.id == id);
+        });
+      }
+
       setState(() {
         categories.add(category); //updating the category list
       });
+
       _categoryNameController.clear();
 
       AnimatedSnackBar.material(
@@ -240,9 +275,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
       Navigator.pop(context);
     } catch (e) {
       print(e);
+      AnimatedSnackBar.material(
+        'Error occurred while saving category',
+        duration: const Duration(seconds: 6),
+        type: AnimatedSnackBarType.error,
+      ).show(context);
     } finally {
       setState(() {
-        _isLoading = false;
+        _isAdding = false;
       });
     }
   }
