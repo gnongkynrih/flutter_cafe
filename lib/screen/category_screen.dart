@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:layout/model/category_model.dart';
+import 'package:layout/widgets/my_drawer.dart';
 import 'package:quickalert/quickalert.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -60,6 +61,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
         backgroundColor: Colors.purple,
       ),
+      drawer: const MyDrawer(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
