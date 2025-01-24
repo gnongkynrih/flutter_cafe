@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -52,6 +53,22 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
             onTap: () {
               Navigator.pushNamed(context, '/category');
+            },
+          ),
+          ListTile(
+            title: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.purple),
+            ),
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.purple,
+            ),
+            onTap: () {
+              //logout
+              FirebaseAuth.instance.signOut();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/login', (route) => false);
             },
           ),
         ],

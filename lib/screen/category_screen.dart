@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:layout/model/category_model.dart';
 import 'package:layout/widgets/my_drawer.dart';
@@ -48,6 +49,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     getCategories();
+    FlutterNativeSplash.remove();
     super.initState();
   }
 
