@@ -35,6 +35,19 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           ListTile(
             title: const Text(
+              'Dashboard',
+              style: TextStyle(color: Colors.purple),
+            ),
+            leading: const Icon(
+              Icons.dashboard,
+              color: Colors.purple,
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, '/dashboard');
+            },
+          ),
+          ListTile(
+            title: const Text(
               'Add Menu',
               style: TextStyle(color: Colors.purple),
             ),
@@ -52,7 +65,7 @@ class _MyDrawerState extends State<MyDrawer> {
               style: TextStyle(color: Colors.purple),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/category');
+              Navigator.pushNamed(context, '/add_table');
             },
           ),
           ListTile(
