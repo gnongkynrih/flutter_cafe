@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:layout/firebase_options.dart';
+import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/screen/add_menu.dart';
 import 'package:layout/screen/category_screen.dart';
 import 'package:layout/screen/dashboard_screen.dart';
@@ -10,6 +11,7 @@ import 'package:layout/screen/login.dart';
 import 'package:layout/screen/registraion.dart';
 import 'package:layout/screen/select_category.dart';
 import 'package:layout/screen/table_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   //initialize firebase
@@ -27,7 +29,12 @@ void main() async {
   //   runApp(const LoginScreen());
   // }
 
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => CafeProvider()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

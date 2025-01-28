@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:layout/model/category_model.dart';
+import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/screen/add_menu.dart';
 import 'package:layout/widgets/my_drawer.dart';
+import 'package:provider/provider.dart';
 
 class SelectCategoryScreen extends StatefulWidget {
   const SelectCategoryScreen({super.key});
@@ -65,12 +67,13 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
                   final category = categories[index];
                   return GestureDetector(
                     onTap: () {
+                      //store the selected category in the provider
+                      Provider.of<CafeProvider>(context, listen: false)
+                          .setSelectedCategory(category);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddMenuScreen(
-                            category: category,
-                          ),
+                          builder: (context) => const AddMenuScreen(),
                         ),
                       );
                     },

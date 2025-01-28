@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:layout/screen/select_table.dart';
 import 'package:layout/widgets/dashboard_widget.dart';
 import 'package:layout/widgets/my_drawer.dart';
 
@@ -35,12 +36,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          children: const [
-            DashboardWidget(
-                tableNumber: "Take Order", icon: Icons.takeout_dining),
-            DashboardWidget(tableNumber: "Complete Order", icon: Icons.done),
-            DashboardWidget(tableNumber: "Cancel Order", icon: Icons.cancel),
-            DashboardWidget(tableNumber: "Reports", icon: Icons.report),
+          children: [
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SelectTableScreen()),
+                );
+              },
+              child: const DashboardWidget(
+                  tableNumber: "Take Order", icon: Icons.takeout_dining),
+            ),
+            const DashboardWidget(
+                tableNumber: "Complete Order", icon: Icons.done),
+            const DashboardWidget(
+                tableNumber: "Cancel Order", icon: Icons.cancel),
+            const DashboardWidget(tableNumber: "Reports", icon: Icons.report),
           ],
         ),
       ),

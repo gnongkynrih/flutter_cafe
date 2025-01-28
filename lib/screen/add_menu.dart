@@ -3,12 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:layout/model/category_model.dart';
+import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/widgets/my_drawer.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 
 class AddMenuScreen extends StatefulWidget {
-  const AddMenuScreen({super.key, required this.category});
-  final CategoryModel category;
+  const AddMenuScreen({super.key});
   @override
   State<AddMenuScreen> createState() => _AddMenuScreenState();
 }
@@ -20,6 +21,15 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   bool _menuStatus = true;
   bool isLoading = false;
+  CategoryModel? category;
+  @override
+  void initState() {
+    super.initState();
+    category =
+        Provider.of<CafeProvider>(context, listen: false).getSelectedCategory();
+
+    _nameController.text = category!.name;
+  }
 
   Future<void> _submitForm() async {
     //menuCollection points to menus in firebase
@@ -35,7 +45,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
         'price': _priceController.text,
         'description': _descriptionController.text,
         'status': _menuStatus,
-        'category_id': widget.category.id,
+        'category_id': category!.id,
       };
       await menuCollection.add(data);
       AnimatedSnackBar.material(
@@ -76,7 +86,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text('Category : ${widget.category.name}'),
+            Text('Category : ${category!.name}'),
             const SizedBox(height: 16),
             Form(
               key: _formKey,

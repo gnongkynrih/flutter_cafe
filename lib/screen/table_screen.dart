@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:layout/helpers/table_helpers.dart';
 import 'package:layout/model/table_model.dart';
 import 'package:layout/widgets/my_drawer.dart';
 import 'package:quickalert/quickalert.dart';
@@ -32,12 +33,7 @@ class _TableScreenState extends State<TableScreen> {
       setState(() {
         _isLoading = true;
       });
-      QuerySnapshot<Object?> tableSnapshot = await _tableCollection.get();
-      for (QueryDocumentSnapshot<Object?> doc in tableSnapshot.docs) {
-        TableModel table =
-            TableModel(name: doc['name'], status: doc['status'], id: doc.id);
-        tables.add(table);
-      }
+      tables = await TableHelpers.getTable();
     } catch (e) {
       print(e);
     } finally {
