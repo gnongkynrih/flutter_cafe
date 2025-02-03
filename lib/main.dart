@@ -8,9 +8,12 @@ import 'package:layout/screen/add_menu.dart';
 import 'package:layout/screen/category_screen.dart';
 import 'package:layout/screen/dashboard_screen.dart';
 import 'package:layout/screen/login.dart';
+import 'package:layout/screen/occupied_table.dart';
 import 'package:layout/screen/registraion.dart';
 import 'package:layout/screen/select_category.dart';
+import 'package:layout/screen/show_order.dart';
 import 'package:layout/screen/table_screen.dart';
+import 'package:layout/screen/take_order.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -51,12 +54,15 @@ class MyApp extends StatelessWidget {
         ),
         home: const DashboardScreen(),
         routes: {
+          '/take_order': (context) => const TakeOrderScreen(),
           '/login': (context) => const LoginScreen(),
           '/select_category': (context) => const SelectCategoryScreen(),
           '/registration': (context) => const RegistrationScreen(),
           '/category': (context) => const CategoryScreen(),
           '/add_table': (context) => const TableScreen(),
           '/dashboard': (context) => const DashboardScreen(),
+          '/occupied_tables': (context) => const OccupiedTableScreen(),
+          '/show_order': (context) => const ShowOrderScreen(),
         });
   }
 }

@@ -6,14 +6,14 @@ import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/widgets/my_drawer.dart';
 import 'package:provider/provider.dart';
 
-class SelectTableScreen extends StatefulWidget {
-  const SelectTableScreen({super.key});
+class OccupiedTableScreen extends StatefulWidget {
+  const OccupiedTableScreen({super.key});
 
   @override
-  State<SelectTableScreen> createState() => _SelectTableScreenState();
+  State<OccupiedTableScreen> createState() => _OccupiedTableScreenState();
 }
 
-class _SelectTableScreenState extends State<SelectTableScreen> {
+class _OccupiedTableScreenState extends State<OccupiedTableScreen> {
   List<TableModel> tables = [];
   bool _isLoading = false;
 
@@ -22,6 +22,13 @@ class _SelectTableScreenState extends State<SelectTableScreen> {
       _isLoading = true;
     });
     tables = await TableHelpers.getTable();
+    //remove the occupied tables
+    tables.removeWhere((table) => table.status == true);
+    // for (var table in tables) {
+    //   if (table.status == true) {
+    //     tables.remove(table);
+    //   }
+    // }
     setState(() {
       _isLoading = false;
     });
@@ -58,7 +65,7 @@ class _SelectTableScreenState extends State<SelectTableScreen> {
                     onTap: () {
                       Provider.of<CafeProvider>(context, listen: false)
                           .setSelectedTable(table.name);
-                      Navigator.pushNamed(context, '/take_order');
+                      Navigator.pushNamed(context, '/show_order');
                     },
                     child: Card(
                       color: Colors.purple.shade200,

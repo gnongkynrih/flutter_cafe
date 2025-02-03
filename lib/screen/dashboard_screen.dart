@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:layout/helpers/category_helpers.dart';
+import 'package:layout/helpers/order_helper.dart';
 import 'package:layout/screen/select_table.dart';
 import 'package:layout/widgets/dashboard_widget.dart';
 import 'package:layout/widgets/my_drawer.dart';
@@ -39,6 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             InkWell(
               onTap: () {
+                OrderHelper.getMenus(context);
+                CategoryHelpers.getAllCategories(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -48,8 +52,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: const DashboardWidget(
                   tableNumber: "Take Order", icon: Icons.takeout_dining),
             ),
-            const DashboardWidget(
-                tableNumber: "Complete Order", icon: Icons.done),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/occupied_tables');
+              },
+              child: const DashboardWidget(
+                  tableNumber: "Complete Order", icon: Icons.done),
+            ),
             const DashboardWidget(
                 tableNumber: "Cancel Order", icon: Icons.cancel),
             const DashboardWidget(tableNumber: "Reports", icon: Icons.report),

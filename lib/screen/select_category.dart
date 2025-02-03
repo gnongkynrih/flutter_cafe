@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:layout/helpers/category_helpers.dart';
 import 'package:layout/model/category_model.dart';
 import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/screen/add_menu.dart';
@@ -24,12 +25,7 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
       setState(() {
         _isLoading = true;
       });
-      QuerySnapshot<Object?> categorySnapshot = await _categoryCollection.get();
-      for (QueryDocumentSnapshot<Object?> doc in categorySnapshot.docs) {
-        CategoryModel category =
-            CategoryModel(name: doc['name'], status: doc['status'], id: doc.id);
-        categories.add(category);
-      }
+      categories = await CategoryHelpers.getCategories();
     } catch (e) {
       print(e);
     } finally {

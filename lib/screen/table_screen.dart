@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

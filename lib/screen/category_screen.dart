@@ -1,10 +1,9 @@
-import 'dart:ffi';
-
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:layout/helpers/category_helpers.dart';
 import 'package:layout/model/category_model.dart';
 import 'package:layout/widgets/my_drawer.dart';
 import 'package:quickalert/quickalert.dart';
@@ -31,12 +30,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       setState(() {
         _isLoading = true;
       });
-      QuerySnapshot<Object?> categorySnapshot = await _categoryCollection.get();
-      for (QueryDocumentSnapshot<Object?> doc in categorySnapshot.docs) {
-        CategoryModel category =
-            CategoryModel(name: doc['name'], status: doc['status'], id: doc.id);
-        categories.add(category);
-      }
+      categories = await CategoryHelpers.getCategories();
     } catch (e) {
       print(e);
     } finally {
