@@ -23,8 +23,8 @@ class SaleModel {
         status = json['status'],
         table = json['table'],
         invoiceDate = (json['invoice_date'] as Timestamp).toDate(),
-        invoiceNumber = json['invoice_number'],
+        invoiceNumber = json['invoice_number'] ?? '',
         orders = (json['items'] as List)
-            .map((item) => MenuModel.fromJson(item))
+            .map((item) => MenuModel.fromJson(Map<String, dynamic>.from(item)))
             .toList();
 }

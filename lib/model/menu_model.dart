@@ -1,10 +1,11 @@
 class MenuModel {
   final String categoryId;
   final String name;
-  final String price;
+  final int price;
   final String description;
   final String? id;
   final bool status;
+  final String? image_url;
   int quantity;
   MenuModel({
     required this.categoryId,
@@ -14,6 +15,7 @@ class MenuModel {
     this.id,
     this.status = true,
     this.quantity = 0,
+    this.image_url,
   });
 
   Map<String, dynamic> toJson() => {
@@ -23,14 +25,16 @@ class MenuModel {
         'description': description,
         'status': status,
         'quantity': quantity,
+        'image_url': image_url,
       };
 
   static MenuModel fromJson(Map<String, dynamic> json) => MenuModel(
         categoryId: json['category_id'],
         name: json['name'],
-        price: json['price'],
+        price: int.parse(json['price'].toString()),
         description: json['description'],
         status: json['status'],
-        quantity: json['quantity'],
+        quantity: int.parse(json['quantity'].toString()),
+        image_url: json['image_url'],
       );
 }

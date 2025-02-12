@@ -4,6 +4,7 @@ import 'package:layout/helpers/category_helpers.dart';
 import 'package:layout/model/category_model.dart';
 import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/screen/add_menu.dart';
+import 'package:layout/screen/list_menu.dart';
 import 'package:layout/widgets/my_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,7 @@ class _SelectCategoryScreenState extends State<SelectCategoryScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AddMenuScreen(),
+                          builder: (context) => const ListMenu(),
                         ),
                       );
                     },
