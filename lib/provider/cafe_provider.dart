@@ -8,6 +8,26 @@ class CafeProvider with ChangeNotifier {
   List<MenuModel> allMenu = [];
   List<CategoryModel> allCategories = [];
   int quantity = 1;
+  String userMobile = '';
+  String otpCode = '';
+
+  String getOtpCode() {
+    return otpCode;
+  }
+
+  void setOtpCode(String code) {
+    otpCode = code;
+    notifyListeners();
+  }
+
+  String getMobileNo() {
+    return userMobile;
+  }
+
+  void setMobileNo(String no) {
+    userMobile = no;
+    notifyListeners();
+  }
 
   int getQuantity() {
     return quantity;

@@ -35,7 +35,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   late final Storage storage;
   String _imageUrl = '';
   static const String _bucketId = '67ac1d500021cae5edd4';
-  late final Databases databases;
+  // late final Databases databases;
 
   final CollectionReference _menuCollection =
       FirebaseFirestore.instance.collection('menus');
@@ -54,7 +54,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
         .setProject('67ac1c09002d41191574');
 
     storage = Storage(client); // Initialize Appwrite storage
-    databases = Databases(client); // Initialize Appwrite databases
+    // databases = Databases(client); // Initialize Appwrite databases
   }
 
   @override
@@ -73,56 +73,57 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
           text: 'Image not uploaded. Continue save?',
           confirmBtnText: 'Save',
           cancelBtnText: 'Cancel',
-          onConfirmBtnTap: () async {
-            setState(() => isLoading = true);
-            try {
-              //use firebase database not appwrite
-              await _menuCollection.add({
-                'name': _nameController.text,
-                'price': _priceController.text,
-                'description': _descriptionController.text,
-                'status': _menuStatus,
-                'category_id': category!.id,
-                'image_url': _imageUrl,
-                'created_at': DateTime.now().toIso8601String(),
-              });
-
-              // Create the document in Appwrite
-              // final databases = Databases(client);
-              // await databases.createDocument(
-              //   databaseId: '67a44ee70021df78df34', // Replace with your database ID
-              //   collectionId: 'menus', // Replace with your collection ID
-              //   documentId: ID.unique(),
-              //   data: {
-              //     'name': _nameController.text,
-              //     'price': _priceController.text,
-              //     'description': _descriptionController.text,
-              //     'status': _menuStatus,
-              //     'category_id': category!.id,
-              //     'image_url': _imageUrl,
-              //     'created_at': DateTime.now().toIso8601String(),
-              //   },
-              // );
-
-              AnimatedSnackBar.material(
-                'Menu added successfully',
-                duration: const Duration(seconds: 6),
-                type: AnimatedSnackBarType.success,
-              ).show(context);
-              Navigator.pop(context);
-            } catch (e) {
-              QuickAlert.show(
-                context: context,
-                type: QuickAlertType.error,
-                title: 'Error',
-                text: e.toString(),
-              );
-            } finally {
-              setState(() {
-                isLoading = false;
-              });
-            }
+          onCancelBtnTap: () {
+            return;
           });
+    }
+    setState(() => isLoading = true);
+    try {
+      //use firebase database not appwrite
+      await _menuCollection.add({
+        'name': _nameController.text,
+        'price': _priceController.text,
+        'description': _descriptionController.text,
+        'status': _menuStatus,
+        'category_id': category!.id,
+        'image_url': _imageUrl,
+        'created_at': DateTime.now().toIso8601String(),
+      });
+
+      // Create the document in Appwrite
+      // final databases = Databases(client);
+      // await databases.createDocument(
+      //   databaseId: '67a44ee70021df78df34', // Replace with your database ID
+      //   collectionId: 'menus', // Replace with your collection ID
+      //   documentId: ID.unique(),
+      //   data: {
+      //     'name': _nameController.text,
+      //     'price': _priceController.text,
+      //     'description': _descriptionController.text,
+      //     'status': _menuStatus,
+      //     'category_id': category!.id,
+      //     'image_url': _imageUrl,
+      //     'created_at': DateTime.now().toIso8601String(),
+      //   },
+      // );
+
+      AnimatedSnackBar.material(
+        'Menu added successfully',
+        duration: const Duration(seconds: 6),
+        type: AnimatedSnackBarType.success,
+      ).show(context);
+      Navigator.pop(context);
+    } catch (e) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: e.toString(),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -137,25 +138,25 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
 
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedFile.path,
-      aspectRatioPresets: [
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Crop Image',
-          toolbarColor: Colors.purple,
-          toolbarWidgetColor: Colors.white,
-          activeControlsWidgetColor: Colors.purple,
-          hideBottomControls: false,
-        ),
-        IOSUiSettings(
-          title: 'Crop Image',
-          aspectRatioPickerButtonHidden: false,
-        )
-      ],
+      // aspectRatioPresets: [
+      //   CropAspectRatioPreset.original,
+      //   CropAspectRatioPreset.square,
+      //   CropAspectRatioPreset.ratio4x3,
+      //   CropAspectRatioPreset.ratio16x9
+      // ],
+      // uiSettings: [
+      //   AndroidUiSettings(
+      //     toolbarTitle: 'Crop Image',
+      //     toolbarColor: Colors.purple,
+      //     toolbarWidgetColor: Colors.white,
+      //     activeControlsWidgetColor: Colors.purple,
+      //     hideBottomControls: false,
+      //   ),
+      //   IOSUiSettings(
+      //     title: 'Crop Image',
+      //     aspectRatioPickerButtonHidden: false,
+      //   )
+      // ],
       compressFormat: ImageCompressFormat.jpg,
       compressQuality: 70,
     );
@@ -197,8 +198,10 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
           file: InputFile.fromPath(
               path: imageToUpload.path), // Upload the selected image
         );
-        final imageUrl = Uri.parse(
-            'https://cloud.appwrite.io/v1/storage/buckets/$_bucketId/files/${file.$id}/view');
+        //get image url
+        String url =
+            'https://cloud.appwrite.io/v1/storage/buckets/$_bucketId/files/${file.$id}/view';
+        final imageUrl = Uri.parse(url);
         _imageUrl = imageUrl.toString();
         AnimatedSnackBar.material(
           'Image uploaded successfully',

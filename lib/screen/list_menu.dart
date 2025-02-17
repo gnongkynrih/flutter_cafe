@@ -6,17 +6,16 @@ import 'package:layout/provider/cafe_provider.dart';
 import 'package:layout/screen/add_menu.dart';
 import 'package:layout/screen/select_table.dart';
 import 'package:provider/provider.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ListMenu extends StatefulWidget {
   const ListMenu({super.key});
-
   @override
   State<ListMenu> createState() => _ListMenuState();
 }
 
 class _ListMenuState extends State<ListMenu> {
+  static const projectId = '67ac1c09002d41191574';
+
   CategoryModel? category;
   List<MenuModel> menues = [];
   bool isLoading = false;
@@ -79,10 +78,14 @@ class _ListMenuState extends State<ListMenu> {
                           child: Card(
                               child: Row(
                             children: [
-                              SizedBox(
-                                width: 100,
-                                child: Image.network(
-                                    '${menues[index].image_url}?project=67ac1c09002d41191574'),
+                              CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.purple.shade200,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.network(
+                                      '${menues[index].image_url}?project=$projectId'),
+                                ),
                               ),
                               const SizedBox(width: 16),
                               Column(

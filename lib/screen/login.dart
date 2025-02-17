@@ -2,6 +2,9 @@ import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:layout/screen/home_page.dart';
+import 'package:layout/screen/mobile_login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -84,7 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Navigator.pushReplacementNamed(context, '/category');
                         if (response == null) {
                           // login success
-                          Navigator.pushReplacementNamed(context, '/category');
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
                         } else {
                           AnimatedSnackBar.material(
                             mobileSnackBarPosition:
@@ -103,6 +109,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushNamed(context, '/registration');
                     },
                   ),
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MobileLogin()),
+                      );
+                    },
+                    label: const Text('Login with mobile'),
+                    icon: const FaIcon(FontAwesomeIcons.mobile),
+                  )
                 ],
               )),
         ),
